@@ -17,7 +17,7 @@ local printStringOnServer = Instance.new("RemoteEvent", ReplicatedStorage) -- bo
 printStringOnServer.Name = "PrintStringOnServer" -- boilerplate (grows with # of signals)
 
 local function onPrintStringOnServer(player, string) -- the actual valuable code
-	print(string)
+    print(string)
 end
 
 printStringOnServer.OnServerInvoke = onPrintStringOnServer -- boilerplate (grows with # of signals)
@@ -49,12 +49,12 @@ local MySingalManager = SignalManager:new("MySingalManager", SignalManager.Event
 
 -- Print a string on the server
 MySingalManager.PrintStringOnServer = function(player, string) -- valuable code
-	print(string)
+    print(string)
 end
 
 -- Print 2 strings on the server
 MySingalManager.PrintTwoStringsOnServer = function(player, string1, string1) -- valuable code
-	print(string1 .. string2)
+    print(string1 .. string2)
 end
 
 -------------------
