@@ -31,7 +31,7 @@ local printStringOnServerRequest = ReplicatedStorage:WaitForChild("PrintStringOn
 printStringOnServerRequest:InvokeServer("Hello, tedious boilerplate") -- the actual valuable code
 ```
 
-You can imagine as a game scales, this boilerplate will start taking a ton of space. Instead, I would rather just define a function on the server, and call it on the client. SignalManager Works like this:
+All this boilerplate is required for every single signal you add! You can imagine as a game scales, this boilerplate will start taking a ton of space, make code less readable and generally be annoying. Instead, I would rather just define a function on the server, and call it on the client.
 
 ## My Solution
 Enter SignalManager
