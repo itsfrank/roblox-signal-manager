@@ -1,7 +1,7 @@
 # Roblox SignalManager
 Managing remote events and remote functions on Roblox is kind of tedious, I made this module to help out
 
-# The Idea
+## The Problem
 Remote event and functions are just that: functions! I don't want to have to manage storing, organizing and finding them in multiple scripts.
 
 This pattern specifically was really annoying me:
@@ -13,26 +13,30 @@ This pattern specifically was really annoying me:
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 -- Print a string on the server
-local printStringOnServer = Instance.new("RemoteEvent", ReplicatedStorage)
-printStringOnServer.Name = "PrintStringOnServer"
+local printStringOnServer = Instance.new("RemoteEvent", ReplicatedStorage) -- boilerplate (grows with # of signals)
+printStringOnServer.Name = "PrintStringOnServer" -- boilerplate (grows with # of signals)
 
-local function onPrintStringOnServer(player, string)
+local function onPrintStringOnServer(player, string) -- the actual valuable code
 	print(string)
 end
 
-printStringOnServer.OnServerInvoke = onPrintStringOnServer
+printStringOnServer.OnServerInvoke = onPrintStringOnServer -- boilerplate (grows with # of signals)
 
 -------------------
 -- ClientScript.lua
 -------------------
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local printStringOnServerRequest = ReplicatedStorage:WaitForChild("PrintStringOnServer")
+local printStringOnServerRequest = ReplicatedStorage:WaitForChild("PrintStringOnServer") -- boilerplate (grows with # of signals)
 
-printStringOnServerRequest:InvokeServer("Hello, tedious boilerplate")
+printStringOnServerRequest:InvokeServer("Hello, tedious boilerplate") -- the actual valuable code
 ```
 
 You can imagine as a game scales, this boilerplate will start taking a ton of space. Instead, I would rather just define a function on the server, and call it on the client. SignalManager Works like this:
 
+## My Solution
+Enter SignalManager
+
+### Reduced, and constant boilerplate regardless of how many signals you have
 ```lua
 -------------------
 -- ServerScript.lua
@@ -41,15 +45,15 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local SignalManager = require(ReplicatedStorage.SignalManager)
 
 -- Instantiate one single signal manager
-local MySingalManager = SignalManager:new("MySingalManager", SignalManager.EventType.RemoteEvent) 
+local MySingalManager = SignalManager:new("MySingalManager", SignalManager.EventType.RemoteEvent) -- boilerplate (does not grow with # of signals)
 
 -- Print a string on the server
-MySingalManager.PrintStringOnServer = function(player, string)
+MySingalManager.PrintStringOnServer = function(player, string) -- valuable code
 	print(string)
 end
 
 -- Print 2 strings on the server
-MySingalManager.PrintTwoStringsOnServer = function(player, string1, string1)
+MySingalManager.PrintTwoStringsOnServer = function(player, string1, string1) -- valuable code
 	print(string1 .. string2)
 end
 
@@ -60,13 +64,15 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local SignalManager = require(ReplicatedStorage.SignalManager)
 
 -- Instantiate one single signal manager
-local MySingalManager = SignalManager:new("MySingalManager") 
+local MySingalManager = SignalManager:new("MySingalManager") -- boilerplate (does not grow with # of signals)
 
-MySingalManager.PrintStringOnServer:InvokeServer("Hello, less tedious boilerplate")
-MySingalManager.PrintTwoStringsOnServer:InvokeServer("Hello, ", "less tedious boilerplate")
+MySingalManager.PrintStringOnServer:InvokeServer("Hello, less tedious boilerplate") -- valuable code
+MySingalManager.PrintTwoStringsOnServer:InvokeServer("Hello, ", "less tedious boilerplate") -- valuable code
 ```
 
-Not only does this solution have constant boiler-plate instead of added boilerplate for every remote signal, it also organizes your signals as such:
+### Free Organization
+
+SignalManager also organizes your signals into folders under ReplicatedStorage, hidden away for free:
 
 ```
 ReplicatedStorage
@@ -82,10 +88,11 @@ ReplicatedStorage
         |    AlsoCoolRemoteSignal
 ```
 
-# More bonus features
+### Free nil protection
 The signal manager takes care of calling `WaitForChild("RemoteSignal")` the first time you try and access a signal on the client, but it then stores it internally so subsequent accesses are faster.
 
-It will also detect typos, or re-registering of the same signal. And it allows you to have two remote signals have the same name in different contexes without having to do the folder organization yourself. This can significantly shorten the remote signal names. E.g.:
+## Free namespace management
+It prevents the re-registering of the same signal and allows you to have two remote signals have the same name in different contexes for free. This can significantly shorten the remote signal names. E.g.:
 ```lua
 -------------------
 -- ClientScript.lua
