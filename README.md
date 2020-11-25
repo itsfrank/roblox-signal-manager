@@ -113,7 +113,7 @@ The SignalManager constructor takes 3 Parameters:
 						and RemoteFunctiosn under the same folder that can be accessed by one single SignalManager on the Client
 
 You can use `dontCreateNew` to put RemoteEvents and RemoteFunctions under the same folder:
-```
+```lua
 local MyFunctions = SignalManager:new("MySignals", SignalManager.EventType.RemoteFunction)
 local MyEvents = SignalManager:new("MySignals", SignalManager.EventType.RemoteEvent)
 
