@@ -15,18 +15,26 @@ if RunService:IsServer() then
 	SignalsFolder.Name = "Signals"
 end
 
-function SignalManager:new(name, eventType)
+-- Parameters:
+--	@name: 			name of the manager, it will also ne the name of the folder created under ReplicatedStorage.Signals
+--	@eventType: 	[SERVER ONLY] type of signals created; options are EventType.RemoteFunction or EventType.RemoteEvent
+--	@dontCreateNew: [SERVER ONLY] use this if you want to use the same SignalManager in two different server-side scripts.
+--						All but one such instantiations should set this to true. This can also be used to place RemoteEvents
+--						and RemoteFunctiosn under the same folder that can be accessed by one single SignalManager on the Client
+function SignalManager:new(name, eventType, dontCreateNew)
 	if RunService:IsServer() then
-		if ReplicatedStorage.Signals:FindFirstChild(name) then
-			error("SignalManager with name " .. name .. " already exists")
-		end
-		
 		if eventType ~= SignalManager.SignalType.RemoteFunction and eventType ~= SignalManager.SignalType.RemoteEvent then
 			error("Unsuported event type")
 		end
 		
-		local SignalManagerFolder = Instance.new("Folder", ReplicatedStorage.Signals)
-		SignalManagerFolder.Name = name
+		if not dontCreateNew then
+			if ReplicatedStorage.Signals:FindFirstChild(name) then
+				error("SignalManager with name " .. name .. " already exists")
+			end
+			
+			local SignalManagerFolder = Instance.new("Folder", ReplicatedStorage.Signals)
+			SignalManagerFolder.Name = name
+		end
 	end
 	
 	local newSignalManager = {
@@ -59,13 +67,14 @@ function SignalManager.__newindex(table, key, value)
 	local signal
 	if table._eventType == SignalManager.SignalType.RemoteFunction then
 		signal = Instance.new("RemoteFunction", table._signalFolder)
+		signal.OnServerInvoke = value
 	elseif table._eventType == SignalManager.SignalType.RemoteEvent then
 		signal = Instance.new("RemoteEvent", table._signalFolder)
+		signal.OnServerEvent:Connect(value)
 	end
 
 	table._loadedSignals[key] = true
 	signal.Name = key
-	signal.OnServerInvoke = value
 end
 
 return SignalManager
