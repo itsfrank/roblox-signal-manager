@@ -22,13 +22,25 @@ end
 
 printStringOnServer.OnServerEvent:Connect(onPrintStringOnServer) -- boilerplate (grows with # of signals)
 
+-- Print 2 strings on the server
+local printTwoStringsOnServer = Instance.new("RemoteEvent", ReplicatedStorage) -- boilerplate (grows with # of signals)
+printTwoStringsOnServer.Name = "PrintTwoStringsOnServer" -- boilerplate (grows with # of signals)
+
+local function onPrintTwoStringsOnServer(player, string) -- the actual valuable code
+    print(string)
+end
+
+printTwoStringsOnServer.OnServerEvent:Connect(onPrintTwoStringsOnServer) -- boilerplate (grows with # of signals)
+
 -------------------
 -- ClientScript.lua
 -------------------
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local printStringOnServerRequest = ReplicatedStorage:WaitForChild("PrintStringOnServer") -- boilerplate (grows with # of signals)
+local printTwoStringsOnServerRequest = ReplicatedStorage:WaitForChild("PrintStringOnServer") -- boilerplate (grows with # of signals)
 
 printStringOnServerRequest:FireServer("Hello, tedious boilerplate") -- the actual valuable code
+printTwoStringsOnServerRequest:FireServer("Hello", ", tedious boilerplate") -- the actual valuable code
 ```
 
 All this boilerplate is required for every single signal you add! You can imagine as a game scales, this boilerplate will start taking a ton of space, make code less readable and generally be annoying. Instead, I would rather just define a function on the server, and call it on the client.
