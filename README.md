@@ -86,7 +86,7 @@ ReplicatedStorage
 The signal manager takes care of calling `WaitForChild("RemoteSignal")` the first time you try and access a signal on the client, but it then stores it internally so subsequent accesses are faster.
 
 It will also detect typos, or re-registering of the same signal. And it allows you to have two remote signals have the same name in different contexes without having to do the folder organization yourself. E.g.:
-```
+```lua
 -------------------
 -- ClientScript.lua
 -------------------
