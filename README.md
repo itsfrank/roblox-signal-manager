@@ -92,7 +92,7 @@ ReplicatedStorage
 The signal manager takes care of calling `WaitForChild("RemoteSignal")` the first time you try and access a signal on the client, but it then stores it internally so subsequent accesses are faster.
 
 ## Free namespace management
-It prevents the re-registering of the same signal and allows you to have two remote signals have the same name in different contexes for free. This can significantly shorten the remote signal names. E.g.:
+It prevents the re-registering of the same signal (with a clear and obvious error) and allows you to have two remote signals have the same name in different contexes for free. This can significantly shorten the remote signal names. E.g.:
 ```lua
 -------------------
 -- ClientScript.lua
