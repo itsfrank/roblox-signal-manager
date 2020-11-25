@@ -115,7 +115,7 @@ The SignalManager constructor takes 3 Parameters:
 You can use `dontCreateNew` to put RemoteEvents and RemoteFunctions under the same folder:
 ```lua
 local MyFunctions = SignalManager:new("MySignals", SignalManager.EventType.RemoteFunction)
-local MyEvents = SignalManager:new("MySignals", SignalManager.EventType.RemoteEvent)
+local MyEvents = SignalManager:new("MySignals", SignalManager.EventType.RemoteEvent, true) -- dontCreateNew used here
 
 MyFunctions.printFunction = function(player, string)
     print(string)
@@ -126,3 +126,5 @@ MyEvents.printEvent = function(player, string)
     print(string)
 end
 ```
+
+Both `printFunction` and `printEvent` will be under `ReplicatedStorage.Signals.MySignals`
